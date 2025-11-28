@@ -45,6 +45,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/periods/export', [PeriodController::class, 'export'])->name('periods.export');
     Route::post('/periods/{period}/complete', [PeriodController::class, 'complete'])->name('periods.complete');
     Route::post('/periods/{period}/hide', [PeriodController::class, 'hide'])->name('periods.hide');
+    Route::post('/periods/{id}/restore', [PeriodController::class, 'restore'])->name('periods.restore');
 
     
 });

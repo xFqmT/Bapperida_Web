@@ -1,18 +1,26 @@
 <x-layouts.app :title="__('Import Excel')">
-    <div class="min-h-screen bg-gray-50 dark:bg-zinc-900 py-8">
-        <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-zinc-800 shadow-lg rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-700">
-                <div class="px-6 py-5 border-b border-zinc-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-900">
-                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                        </svg>
-                        Import Data Excel
-                    </h2>
-                    <p class="text-gray-500 dark:text-gray-400 mt-1 text-sm">
-                        Upload file Excel untuk menambahkan data periode secara massal.
-                    </p>
-                </div>
+    <div class="min-h-screen relative overflow-hidden page-fade">
+        <!-- Background -->
+        <div class="fixed inset-0" style="background: url('{{ asset('images/foto_bapperida.png') }}') center/cover; filter: blur(5px); transform: scale(1.05);"></div>
+        <div class="fixed inset-0 bg-black/25"></div>
+
+        <!-- Content -->
+        <div class="relative z-10 min-h-screen py-8">
+            <div class="w-full px-4 sm:px-6 lg:px-8">
+                <!-- Responsive container that adapts to sidebar state -->
+                <div class="max-w-2xl mx-auto">
+                    <div class="bg-white dark:bg-zinc-800 shadow-lg rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-700">
+                    <div class="px-6 py-5 border-b border-zinc-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-900">
+                        <h2 class="text-2xl font-bold text-gray-800 dark:text-white flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                            </svg>
+                            Import Data Excel
+                        </h2>
+                        <p class="text-gray-500 dark:text-gray-400 mt-1 text-sm">
+                            Upload file Excel untuk menambahkan data periode secara massal.
+                        </p>
+                    </div>
 
                 <!-- Instructions -->
                 <div class="px-6 py-4 bg-blue-50 dark:bg-blue-900/20 border-b border-zinc-200 dark:border-zinc-700">
@@ -46,7 +54,7 @@
                                     <p class="pl-1">atau drag and drop</p>
                                 </div>
                                 <p class="text-xs text-zinc-500 dark:text-zinc-400">
-                                    PNG, JPG, GIF up to 10MB
+                                    Format yang didukung: XLSX, XLS, CSV (maks. 10MB)
                                 </p>
                             </div>
                         </div>
@@ -90,15 +98,8 @@
                         </button>
                     </div>
                 </form>
+                </div>
             </div>
         </div>
     </div>
-
-    <script>
-        // Show file name when selected
-        document.getElementById('file').addEventListener('change', function(e) {
-            const fileName = e.target.files[0]?.name || '';
-            document.getElementById('file-name').textContent = fileName ? `File selected: ${fileName}` : '';
-        });
-    </script>
 </x-layouts.app>

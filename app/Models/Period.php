@@ -44,7 +44,7 @@ class Period extends Model
         $monthsLeft = $now->diffInMonths($endDate, false);
 
         if ($monthsLeft < 0) {
-            return 'selesai'; // Lewat tanggal
+            return 'proses'; // Tetap proses meskipun lewat tanggal
         } elseif ($monthsLeft <= 2) {
             return 'deadline';
         } elseif ($monthsLeft <= 4) {

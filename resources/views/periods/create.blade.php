@@ -1,7 +1,13 @@
-<x-layouts.app :title="__('Tambah Periode')">
-    <div class="min-h-screen bg-gray-50 dark:bg-zinc-900 py-8">
-        <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-zinc-800 shadow-lg rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-700">
+<x-layouts.app :title="('Tambah Periode')">
+    <div class="min-h-screen flex items-center justify-center relative overflow-hidden page-fade">
+        <!-- Background -->
+        <div class="fixed inset-0" style="background: url('{{ asset('images/foto_bapperida.png') }}') center/cover; filter: blur(5px); transform: scale(1.05);"></div>
+        <div class="fixed inset-0 bg-black/25"></div>
+        
+        <!-- Content -->
+        <div class="relative z-10 w-full px-4 sm:px-6 lg:px-8 py-8">
+            <div class="max-w-lg mx-auto">
+                    <div class="bg-white dark:bg-zinc-800 shadow-lg rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-700">
                 <div class="px-6 py-5 border-b border-zinc-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-900">
                     <h2 class="text-2xl font-bold text-gray-800 dark:text-white flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -9,7 +15,7 @@
                         </svg>
                         Tambah Periode Baru
                     </h2>
-                    <p class="text-gray-500 dark:text-gray-400 mt-1 text-sm">
+                    <p class="text-gray-600 dark:text-gray-300 text-sm mt-1">
                         Tambahkan periode gaji berkala untuk pegawai baru.
                     </p>
                 </div>
@@ -74,6 +80,8 @@
                         </button>
                     </div>
                 </form>
+            </div>
+                </div>
             </div>
         </div>
     </div>

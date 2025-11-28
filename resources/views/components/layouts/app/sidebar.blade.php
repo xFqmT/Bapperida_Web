@@ -4,12 +4,26 @@
         @include('partials.head')
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">
-        <flux:sidebar sticky stashable class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
+        <!-- Floating Toggle Button (shown when sidebar is hidden) -->
+        <button id="floatingToggle" class="fixed top-4 left-4 z-50 p-2 bg-white dark:bg-zinc-800 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-all duration-200 hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-zinc-600 dark:text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+        </button>
+        
+        <flux:sidebar sticky stashable class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 transition-all duration-300 ease-in-out" id="mainSidebar">
             <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
-            <a href="{{ route('dashboard') }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
-                <x-app-logo />
-            </a>
+            <div class="flex items-center justify-between px-4 py-2">
+                <a href="{{ route('dashboard') }}" class="flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
+                    <x-app-logo />
+                </a>
+                <button id="sidebarToggle" class="p-1.5 bg-white dark:bg-zinc-800 rounded-md shadow border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-all duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-zinc-600 dark:text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+            </div>
 
             <flux:navlist variant="outline">
                 <flux:navlist.group :heading="__('Platform')" class="grid">
@@ -118,5 +132,153 @@
         {{ $slot }}
 
         @fluxScripts
+        
+        <style>
+            /* Desktop layout: use a two-column grid for sidebar + main */
+            @media (min-width: 1024px) {
+                body {
+                    display: grid;
+                    grid-template-columns: 16rem minmax(0, 1fr);
+                    min-height: 100vh;
+                }
+
+                flux\:sidebar {
+                    grid-column: 1;
+                }
+
+                flux\:header {
+                    grid-column: 1 / -1;
+                }
+
+                flux\:main {
+                    grid-column: 2;
+                    /* Avoid animating width so the main content doesn't stretch when sidebar toggles */
+                }
+
+                /* When sidebar is hidden, collapse its column so main stretches full width */
+                body.sidebar-hidden {
+                    grid-template-columns: 0 minmax(0, 1fr);
+                }
+            }
+
+            /* Smooth transitions for the foreground dashboard content (opacity only to avoid layout shifts) */
+            .relative.z-10 {
+                transition: opacity 0.25s ease-in-out;
+            }
+
+            /* Padding when the sidebar is hidden (full-width content, no extra narrowing) */
+            body.sidebar-hidden .relative.z-10 {
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            @media (max-width: 1023px) {
+                body.sidebar-hidden .relative.z-10 {
+                    padding-left: 0;
+                    padding-right: 0;
+                }
+            }
+
+            /* Generic page fade-in / fade-out helper */
+            .page-fade {
+                opacity: 0;
+                animation: pageFadeIn 0.25s ease-out forwards;
+            }
+
+            @keyframes pageFadeIn {
+                to {
+                    opacity: 1;
+                }
+            }
+
+            body.page-fade-out .page-fade {
+                opacity: 0;
+                transition: opacity 0.2s ease-in;
+            }
+        </style>
+        
+        <script>
+            (function() {
+                // Wait for DOM to be ready
+                function initSidebar() {
+                    const sidebarToggle = document.getElementById('sidebarToggle');
+                    const floatingToggle = document.getElementById('floatingToggle');
+                    const mainSidebar = document.getElementById('mainSidebar');
+                    const mainContent = document.querySelector('flux\\:main');
+                    
+                    // Check if all required elements exist
+                    if (!sidebarToggle || !floatingToggle || !mainSidebar) {
+                        console.warn('Sidebar elements not found, retrying in 100ms...');
+                        setTimeout(initSidebar, 100);
+                        return;
+                    }
+                    
+                    // Get sidebar state from localStorage, default to true (visible)
+                    let isSidebarVisible = localStorage.getItem('sidebarVisible') !== 'false';
+                    
+                    // Debug logging
+                    console.log('Sidebar initialized:', {
+                        sidebarToggle: !!sidebarToggle,
+                        floatingToggle: !!floatingToggle,
+                        mainSidebar: !!mainSidebar,
+                        mainContent: !!mainContent,
+                        initialState: isSidebarVisible
+                    });
+                    
+                    // Apply initial state
+                    function applySidebarState(visible) {
+                        const body = document.body;
+                        
+                        if (visible) {
+                            // Show sidebar
+                            mainSidebar.classList.remove('-translate-x-full');
+                            mainSidebar.classList.add('translate-x-0');
+                            floatingToggle.classList.add('hidden');
+                            body.classList.remove('sidebar-hidden');
+                        } else {
+                            // Hide sidebar
+                            mainSidebar.classList.add('-translate-x-full');
+                            mainSidebar.classList.remove('translate-x-0');
+                            floatingToggle.classList.remove('hidden');
+                            body.classList.add('sidebar-hidden');
+                        }
+                    }
+                    
+                    function toggleSidebar(e) {
+                        if (e) e.preventDefault();
+                        console.log('Toggle called, current state:', isSidebarVisible);
+                        
+                        isSidebarVisible = !isSidebarVisible;
+                        applySidebarState(isSidebarVisible);
+                        
+                        // Save state to localStorage
+                        localStorage.setItem('sidebarVisible', isSidebarVisible.toString());
+                        
+                        console.log('Toggle completed, new state:', isSidebarVisible);
+                    }
+                    
+                    // Apply initial state on page load
+                    applySidebarState(isSidebarVisible);
+                    
+                    // Add event listeners
+                    sidebarToggle.addEventListener('click', toggleSidebar);
+                    floatingToggle.addEventListener('click', toggleSidebar);
+                    
+                    console.log('Sidebar event listeners attached successfully');
+                }
+
+                // Initialize when DOM is ready
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', initSidebar);
+                } else {
+                    initSidebar();
+                }
+            })();
+
+            // Simple global fade-out hook when leaving the page
+            window.addEventListener('beforeunload', function () {
+                document.body.classList.add('page-fade-out');
+            });
+        </script>
     </body>
 </html>
