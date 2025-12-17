@@ -59,7 +59,7 @@
             </div>
 
             <!-- Logo -->
-            <div class="flex justify-center md:justify-start">
+            <div class="flex justify-center md:justify-start">    
                 <img src="{{ asset('images/logo_bapperida.png') }}"
                      alt="Logo Bapperida Provinsi Bengkulu"
                      class="max-w-[140px] sm:max-w-[180px] md:max-w-[220px] lg:max-w-[260px] h-auto drop-shadow-lg">

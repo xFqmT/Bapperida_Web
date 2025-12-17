@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+s<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
         <meta charset="utf-8">
@@ -60,7 +60,7 @@
                     <!-- Session Status -->
                     <x-auth-session-status class="text-center" :status="session('status')" />
 
-                    <form method="POST" action="{{ route('login.store') }}" class="space-y-6">
+                    <form method="POST" action="/custom-login" class="space-y-6">
                         @csrf
 
                         <!-- Username Field -->
@@ -91,11 +91,6 @@
                                     class="w-full"
                                 />
                             </div>
-
-                        <!-- Remember Me -->
-                        <div class="flex items-center justify-between">
-                            <flux:checkbox name="remember" :label="('Remember me')" :checked="old('remember')" />
-                        </div>
 
                         <div>
                             <flux:button variant="primary" type="submit" class="w-full" data-test="login-button">

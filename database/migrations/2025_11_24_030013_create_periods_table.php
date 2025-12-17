@@ -14,6 +14,7 @@ return new class extends Migration
             $table->date('tanggal_awal');
             $table->date('tanggal_akhir');
             $table->enum('status', ['active', 'completed'])->default('active');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

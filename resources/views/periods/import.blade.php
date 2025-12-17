@@ -27,7 +27,7 @@
                     <h3 class="text-sm font-medium text-blue-800 dark:text-blue-300 mb-2">📋 Format File Excel:</h3>
                     <ul class="text-sm text-blue-700 dark:text-blue-400 space-y-1">
                         <li>• File harus berformat .xlsx, .xls, atau .csv</li>
-                        <li>• Kolom A: Nama Pegawai</li>
+                        <li>• Kolom A: Nama</li>
                         <li>• Kolom B: Tanggal Awal (format: YYYY-MM-DD atau DD-MM-YYYY)</li>
                         <li>• Baris pertama adalah header (nama, tanggal_awal)</li>
                     </ul>
@@ -70,13 +70,13 @@
                         <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
                             Download contoh file Excel untuk melihat format yang benar.
                         </p>
-                        <button type="button" 
-                                class="inline-flex items-center px-3 py-2 border border-zinc-300 dark:border-zinc-600 text-sm font-medium rounded-md shadow-sm text-zinc-700 dark:text-zinc-200 bg-white dark:bg-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-500 transition">
+                        <a href="{{ route('periods.import.example') }}" 
+                           class="inline-flex items-center px-3 py-2 border border-zinc-300 dark:border-zinc-600 text-sm font-medium rounded-md shadow-sm text-zinc-700 dark:text-zinc-200 bg-white dark:bg-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-500 transition">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
                             Download Contoh
-                        </button>
+                        </a>
                     </div>
 
                     <!-- Buttons -->
@@ -90,7 +90,7 @@
                         </a>
                         
                         <button type="submit"
-                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition">
+                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition cursor-pointer">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                             </svg>
@@ -102,4 +102,48 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // File upload UI fix
+        document.getElementById('file').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name || '';
+            const fileNameDisplay = document.getElementById('file-name');
+            
+            if (fileName) {
+                fileNameDisplay.textContent = `File selected: ${fileName}`;
+                fileNameDisplay.className = 'mt-2 text-sm text-green-600 dark:text-green-400 font-medium';
+            } else {
+                fileNameDisplay.textContent = '';
+                fileNameDisplay.className = 'mt-2 text-sm text-gray-600 dark:text-gray-400';
+            }
+        });
+
+        // Drag and drop functionality
+        const dropZone = document.querySelector('.border-dashed');
+        
+        dropZone.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
+        });
+        
+        dropZone.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
+        });
+        
+        dropZone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                const fileInput = document.getElementById('file');
+                fileInput.files = files;
+                
+                // Trigger change event to update file name display
+                const event = new Event('change', { bubbles: true });
+                fileInput.dispatchEvent(event);
+            }
+        });
+    </script>
 </x-layouts.app>

@@ -58,7 +58,7 @@ php artisan serve
 ## ⚙️ Konfigurasi
 
 ### Database
-Edit file `.env` untuk setup database:
+Edit file `.env` untuk setup database: 
 
 ```env
 DB_CONNECTION=sqlite
